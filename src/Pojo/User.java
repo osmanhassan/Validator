@@ -5,7 +5,7 @@ public class User {
     String name;
     String email;
     String phone;
-    int age;
+    Integer age;
 
     public void setAge(int age) {
         this.age = age;
@@ -23,7 +23,7 @@ public class User {
         this.phone = phone;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 

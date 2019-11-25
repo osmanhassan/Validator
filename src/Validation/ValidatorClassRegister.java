@@ -1,5 +1,9 @@
 package Validation;
 
+import Validation.ValidationDecoratots.DefaultValidationDecorator;
+import Validation.ValidationDecoratots.EmailValidationDecorator;
+import Validation.ValidationDecoratots.RequiredValidationDecorator;
+
 import java.util.HashMap;
 
 public class ValidatorClassRegister {
@@ -10,9 +14,9 @@ public class ValidatorClassRegister {
         this.validatorClassRegistry = new HashMap();
 
         this.validatorClassRegistry
-                .put("required", "Validation.ValidationDecoratots.RequiredValidationDecorator");
+                .put("required", new RequiredValidationDecorator<>(new DefaultValidationDecorator()).getClass().getName());
         this.validatorClassRegistry
-                .put("email", "Validation.ValidationDecoratots.EmailValidationDecorator");
+                .put("email", new EmailValidationDecorator<>(new DefaultValidationDecorator()).getClass().getName());
 
     }
 

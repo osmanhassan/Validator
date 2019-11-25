@@ -1,5 +1,8 @@
 package Validation.ValidationDecoratots;
 
+import Validation.ValidationDecoratots.ValidationDecorator;
+
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class RequiredValidationDecorator<T> extends ValidationDecorator<T> {
@@ -11,18 +14,24 @@ public class RequiredValidationDecorator<T> extends ValidationDecorator<T> {
     }
 
     @Override
-    public String validate(T o, List<String> allFieldNames, String subjectFieldName) throws Exception {
+    public String validate(T o, String additionalDataOfRule, String subjectFieldName) throws Exception {
 
-        char[] subjectFieldNameCharArray = subjectFieldName.toCharArray();
-        subjectFieldNameCharArray[0] = Character.toUpperCase(subjectFieldNameCharArray[0]);
+        String displayName = getDisplayNameFormFieldName(subjectFieldName);
 
-        String getFieldMethodName = "get" + new String(subjectFieldNameCharArray) ;
+        String validationPassedString = this.validationDecorator.validate(o, additionalDataOfRule, subjectFieldName);
+        String validationFailedString = displayName  + " is required. " + validationPassedString;
 
-        if(o.getClass().getMethod(getFieldMethodName).invoke(o) == null){
-            return new String(subjectFieldNameCharArray)  + " is required " + this.validationDecorator.validate(o, allFieldNames, subjectFieldName);
+        if(getIsNull()){
+            return validationFailedString;
         }
-        else
-            return this.validationDecorator.validate(o, allFieldNames, subjectFieldName);
+
+        String value = getFieldValue(o, subjectFieldName);
+
+        if(value.trim().equals("")){
+            return validationFailedString;
+        }
+
+        return validationPassedString;
 
 
     }

@@ -1,34 +1,32 @@
 import Pojo.User;
 import Validation.Validator.Validator;
+import javafx.print.Collation;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         LinkedHashMap rulesByFields = new LinkedHashMap();
-        rulesByFields.put("name", "required | email");
+        rulesByFields.put("name", "required");
         rulesByFields.put("email", "required | email");
+        rulesByFields.put("age", "required");
 
-        LinkedHashMap errorMessageByRulesByFields = new LinkedHashMap();
-        rulesByFields.put("name.required", "Name is required");
-        rulesByFields.put("email.required", "Email is required");
-        rulesByFields.put("name.email", "Name is not a valid email");
-
+        List collation = new ArrayList<Integer>();
 
         User user = new User();
+        user.setName("Nadim");
+        user.setEmail("has@g.cp");
 
         Validator validator = new Validator(user, rulesByFields);
         System.out.println(validator.validate());
 
-        User user1 = new User();
-        user1.setName("Nadim");
-        rulesByFields = new LinkedHashMap();
-        rulesByFields.put("name", "required");
-        validator = new Validator(user1, rulesByFields);
-        System.out.println(validator.validate());
+
 
     }
 }

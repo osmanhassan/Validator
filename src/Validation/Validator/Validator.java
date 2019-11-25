@@ -1,13 +1,11 @@
 package Validation.Validator;
 
 import Validation.ValidationDecoratots.DefaultValidationDecorator;
-import Validation.ValidationDecoratots.EmailValidationDecorator;
-import Validation.ValidationDecoratots.RequiredValidationDecorator;
 import Validation.ValidationDecoratots.ValidationDecorator;
 import Validation.ValidatorClassRegister;
-import sun.security.jca.GetInstance;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class Validator<T> {
@@ -25,22 +23,20 @@ public class Validator<T> {
 
     }
 
-    public String validate(){
+    public String validate() throws IllegalAccessException {
 
         LinkedHashMap rulesByField = this.rulesByField;
         HashMap validatorClassRegistry = this.validatorClassRegister.getValidatorClassRegistry();
-
         final String[] errorMessage = {""};
 
         rulesByField.forEach((key, value) -> {
             String fieldName = key.toString();
             String rulesString = value.toString();
 
-            String[] ruleNames = rulesString.split("\\|");
+            String[] rules = rulesString.split("\\|");
 
             try {
-                errorMessage[0] += validateSingleField(fieldName,
-                        new ArrayList<>(rulesByField.keySet()), ruleNames);
+                errorMessage[0] += validateSingleField(fieldName, rules);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -52,28 +48,42 @@ public class Validator<T> {
 
     }
 
-    public String validateSingleField(String subjectFieldName, List<String> allFieldsName, String[] rulesName) throws Exception {
+    public String validateSingleField(String subjectFieldName, String[] rules) throws Exception {
 
-        List<Class> validatorClasses = new ArrayList<>();
+        Class[] validatorClasses = new Class[rules.length];
+        String[] additionalDataOfRules = new String[rules.length];
 
-        for(String ruleName : rulesName){
-            ruleName = ruleName.trim().toLowerCase();
+        int count = 0;
+        for(String rule : rules){
+            rule = rule.trim();
+            String[] partsOfRule = rule.split("\\:");
+            String ruleName = partsOfRule[0].trim().toLowerCase();
+
+            String additionalDataOfRule = "";
+
+            if(partsOfRule.length > 1) {
+                additionalDataOfRule = partsOfRule[1];
+            }
+
             String className = this.validatorClassRegister.getValidatorClassRegistry().get(ruleName).toString();
             Class validatorClass = Class.forName(className);
-            validatorClasses.add(validatorClass);
+            validatorClasses[count] = validatorClass;
+            additionalDataOfRules[count] = additionalDataOfRule;
+
+            count++;
         }
 
         ValidationDecorator<T> validationDecorator = new DefaultValidationDecorator<T>();
 
-        for(int i = validatorClasses.size() - 1; i >= 0; i --){
+        for(int i = validatorClasses.length - 1; i >= 0; i --){
 
-            Class cls = validatorClasses.get(i);
+            Class cls = validatorClasses[i];
             Constructor constructor = cls.getConstructor(ValidationDecorator.class);
             validationDecorator = (ValidationDecorator<T>) constructor.newInstance(validationDecorator);
         }
 
 
-        return validationDecorator.validate(this.subjectObject, allFieldsName,subjectFieldName);
+        return validationDecorator.validate(this.subjectObject, "",subjectFieldName);
     }
 
 }
