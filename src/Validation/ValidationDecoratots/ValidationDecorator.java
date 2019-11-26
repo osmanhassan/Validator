@@ -6,6 +6,7 @@ import java.util.List;
 public abstract class ValidationDecorator<T> {
 
     static boolean isNull;
+    static boolean isBail;
     ValidationDecorator validationDecorator;
     String validationAdditionalInfo;
 
@@ -22,6 +23,13 @@ public abstract class ValidationDecorator<T> {
 
     public boolean getIsNull() {
         return isNull;
+    }
+
+    public void setIsBail(boolean isBail) {
+        ValidationDecorator.isBail = isBail;
+    }
+    public boolean getIsBail() {
+        return isBail;
     }
 
     public Method getMethodFromFieldName(T o, String fieldName) throws Exception {
