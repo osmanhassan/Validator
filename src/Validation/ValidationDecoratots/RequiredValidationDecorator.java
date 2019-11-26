@@ -15,19 +15,30 @@ public class RequiredValidationDecorator<T> extends ValidationDecorator<T> {
     public String validate(T o, String subjectFieldName) throws Exception {
 
         String displayName = getDisplayNameFormFieldName(subjectFieldName);
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = displayName + " is required. " + validationPassedString;
+        boolean isValidationFailed = false;
 
         if (getIsNull()) {
-            return validationFailedString;
+            isValidationFailed = true;
+        }
+        else{
+            String value = getFieldValue(o, subjectFieldName);
+
+            if (value.trim().equals("")) {
+                isValidationFailed = true;
+            }
         }
 
-        String value = getFieldValue(o, subjectFieldName);
+        boolean isFailed = isValidationFailed && isBail;
+        String message = displayName + " is required. ";
 
-        if (value.trim().equals("")) {
+        if(isFailed)
+            return message;
+
+        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
+        String validationFailedString = message + validationPassedString;
+
+        if(isValidationFailed)
             return validationFailedString;
-        }
 
         return validationPassedString;
 

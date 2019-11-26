@@ -14,7 +14,7 @@ public class Main {
 
         LinkedHashMap rulesByFields = new LinkedHashMap();
 
-        rulesByFields.put("name", "required");
+        rulesByFields.put("name", "bail | required");
         rulesByFields.put("email", "required");
 
         User user = new User();
