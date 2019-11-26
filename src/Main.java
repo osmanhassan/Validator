@@ -13,9 +13,11 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         LinkedHashMap rulesByFields = new LinkedHashMap();
+        rulesByFields.put("name", "alpha");
+        rulesByFields.put("email", "alpha");
 
         User user = new User();
-        user.setName("Nadim");
+        user.setName("Nad1im");
         user.setEmail("has@g.cp");
 
         Validator validator = new Validator(user, rulesByFields);
