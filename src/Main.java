@@ -13,6 +13,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         LinkedHashMap rulesByFields = new LinkedHashMap();
+        rulesByFields.put("name", "email");
+        rulesByFields.put("email", "email");
 
         User user = new User();
         user.setName("Nadim");
