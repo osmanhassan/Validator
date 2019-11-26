@@ -15,6 +15,14 @@ public class ValidatorClassRegister {
                 .put("accepted", new AcceptedValidationDecorator<>
                         (new DefaultValidationDecorator(), "")
                         .getClass().getName());
+
+        this.validatorClassRegistry
+                .put("bail",
+                        new BailValidationDecorator<>
+                                (new DefaultValidationDecorator(), "")
+                                .getClass().getName());
+
+
     }
 
     public HashMap getValidatorClassRegistry() {

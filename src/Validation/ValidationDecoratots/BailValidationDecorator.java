@@ -11,6 +11,6 @@ public class BailValidationDecorator<T> extends ValidationDecorator<T> {
     @Override
     public String validate(T o, String subjectFieldName) throws Exception {
         setIsBail(true);
-        return "";
+        return validationDecorator.validate(o, subjectFieldName);
     }
 }
