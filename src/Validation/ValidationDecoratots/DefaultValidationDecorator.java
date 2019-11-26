@@ -1,26 +1,27 @@
 package Validation.ValidationDecoratots;
 
 import java.lang.reflect.Method;
-import java.util.List;
+
 
 
 public class DefaultValidationDecorator<T> extends ValidationDecorator<T> {
 
-    public DefaultValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo){
+    public DefaultValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
         super(validationDecorator, validationAdditionalInfo);
     }
 
-    public DefaultValidationDecorator(){super(null, "");}
+    public DefaultValidationDecorator() {
+        super(null, "");
+    }
 
     @Override
     public String validate(T o, String subjectFieldName) throws Exception {
 
         Method method = getMethodFromFieldName(o, subjectFieldName);
 
-        if(method.invoke(o) == null){
+        if (method.invoke(o) == null) {
             setIsNull(true);
-        }
-        else{
+        } else {
             setIsNull(false);
         }
 

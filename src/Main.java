@@ -13,11 +13,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         LinkedHashMap rulesByFields = new LinkedHashMap();
-        rulesByFields.put("name", "required");
-        rulesByFields.put("email", "required | email");
-        rulesByFields.put("age", "required");
-
-        List collation = new ArrayList<Integer>();
 
         User user = new User();
         user.setName("Nadim");
@@ -25,7 +20,6 @@ public class Main {
 
         Validator validator = new Validator(user, rulesByFields);
         System.out.println(validator.validate());
-
 
 
     }
