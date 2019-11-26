@@ -11,6 +11,11 @@ public class ValidatorClassRegister {
 
         this.validatorClassRegistry = new HashMap();
 
+        this.validatorClassRegistry
+                .put("alpha_num", new AlphaNumValidationDecorator<>
+                        (new DefaultValidationDecorator(), "")
+                        .getClass().getName());
+
     }
 
     public HashMap getValidatorClassRegistry() {
