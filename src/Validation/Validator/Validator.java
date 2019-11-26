@@ -68,22 +68,23 @@ public class Validator<T> {
             String className = this.validatorClassRegister.getValidatorClassRegistry().get(ruleName).toString();
             Class validatorClass = Class.forName(className);
             validatorClasses[count] = validatorClass;
-            additionalDataOfRules[count] = additionalDataOfRule;
+            additionalDataOfRules[count] = additionalDataOfRule.trim();
 
             count++;
         }
 
-        ValidationDecorator<T> validationDecorator = new DefaultValidationDecorator<T>();
+        ValidationDecorator<T> validationDecorator = new DefaultValidationDecorator<T>(null, "");
 
         for(int i = validatorClasses.length - 1; i >= 0; i --){
 
             Class cls = validatorClasses[i];
-            Constructor constructor = cls.getConstructor(ValidationDecorator.class);
-            validationDecorator = (ValidationDecorator<T>) constructor.newInstance(validationDecorator);
+            String additionalDataOfRule = additionalDataOfRules[i];
+            Constructor constructor = cls.getConstructor(ValidationDecorator.class, String.class);
+            validationDecorator = (ValidationDecorator<T>) constructor.newInstance(validationDecorator, additionalDataOfRule);
         }
 
 
-        return validationDecorator.validate(this.subjectObject, "",subjectFieldName);
+        return validationDecorator.validate(this.subjectObject, subjectFieldName);
     }
 
 }

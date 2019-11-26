@@ -4,18 +4,17 @@ import java.util.List;
 
 public class AcceptedValidationDecorator extends ValidationDecorator {
 
-    ValidationDecorator validationDecorator;
-
-    public AcceptedValidationDecorator(ValidationDecorator validationDecorator){
-        this.validationDecorator = validationDecorator;
+    public AcceptedValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo){
+        super(validationDecorator, validationAdditionalInfo);
     }
 
     @Override
-    public String validate(Object o, String additionalDataOfRule, String subjectFieldName) throws Exception {
+    public String validate(Object o, String subjectFieldName) throws Exception {
 
         String displayName = getDisplayNameFormFieldName(subjectFieldName);
 
-        String validationPassedString = this.validationDecorator.validate(o, additionalDataOfRule, subjectFieldName);
+        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
+
         String validationFailedString = displayName  + " must be accepted. " + validationPassedString;
 
         if(! getIsNull()){

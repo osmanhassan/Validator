@@ -7,20 +7,19 @@ import java.util.regex.Pattern;
 
 public class EmailValidationDecorator<T> extends ValidationDecorator<T> {
 
-    ValidationDecorator validationDecorator;
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
 
-    public EmailValidationDecorator(ValidationDecorator validationDecorator){
-        this.validationDecorator = validationDecorator;
+    public EmailValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo){
+        super(validationDecorator, validationAdditionalInfo);
     }
 
     @Override
-    public String validate(T o, String additionalDataOfRule, String subjectFieldName) throws Exception {
+    public String validate(T o, String subjectFieldName) throws Exception {
 
-        String validationPassedString = this.validationDecorator.validate(o, additionalDataOfRule, subjectFieldName);
+        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
 
         if(! getIsNull()){
 

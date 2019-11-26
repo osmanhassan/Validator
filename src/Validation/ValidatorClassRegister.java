@@ -14,9 +14,9 @@ public class ValidatorClassRegister {
         this.validatorClassRegistry = new HashMap();
 
         this.validatorClassRegistry
-                .put("required", new RequiredValidationDecorator<>(new DefaultValidationDecorator()).getClass().getName());
+                .put("required", new RequiredValidationDecorator<>(new DefaultValidationDecorator(), "").getClass().getName());
         this.validatorClassRegistry
-                .put("email", new EmailValidationDecorator<>(new DefaultValidationDecorator()).getClass().getName());
+                .put("email", new EmailValidationDecorator<>(new DefaultValidationDecorator(), "").getClass().getName());
 
     }
 

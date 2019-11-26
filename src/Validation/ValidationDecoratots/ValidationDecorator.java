@@ -6,8 +6,15 @@ import java.util.List;
 public abstract class ValidationDecorator<T> {
 
     static boolean isNull;
+    ValidationDecorator validationDecorator;
+    String validationAdditionalInfo;
 
-    public abstract String validate(T o, String additionalDataOfRule, String subjectFieldName) throws Exception;
+    public ValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo){
+        this.validationDecorator = validationDecorator;
+        this.validationAdditionalInfo = validationAdditionalInfo;
+    }
+
+    public abstract String validate(T o, String subjectFieldName) throws Exception;
 
     public void setIsNull(boolean isNull) {
         ValidationDecorator.isNull = isNull;

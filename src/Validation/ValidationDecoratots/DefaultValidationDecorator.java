@@ -5,8 +5,15 @@ import java.util.List;
 
 
 public class DefaultValidationDecorator<T> extends ValidationDecorator<T> {
+
+    public DefaultValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo){
+        super(validationDecorator, validationAdditionalInfo);
+    }
+
+    public DefaultValidationDecorator(){super(null, "");}
+
     @Override
-    public String validate(T o, String additionalDataOfRule, String subjectFieldName) throws Exception {
+    public String validate(T o, String subjectFieldName) throws Exception {
 
         Method method = getMethodFromFieldName(o, subjectFieldName);
 
