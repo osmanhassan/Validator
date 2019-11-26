@@ -1,6 +1,7 @@
 package Validation;
 
 import Validation.ValidationDecoratots.*;
+
 import java.util.HashMap;
 
 public class ValidatorClassRegister {
@@ -10,6 +11,13 @@ public class ValidatorClassRegister {
     public ValidatorClassRegister() {
 
         this.validatorClassRegistry = new HashMap();
+
+        this.validatorClassRegistry
+                .put("required",
+                        new RequiredValidationDecorator<>
+                                (new DefaultValidationDecorator(), "")
+                                .getClass().getName());
+
 
     }
 
