@@ -17,22 +17,33 @@ public class EmailValidationDecorator<T> extends ValidationDecorator<T> {
     @Override
     public String validate(T o, String subjectFieldName) throws Exception {
 
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
+        boolean isValidationFailed = false;
+
+
+        String email = "";
 
         if (!getIsNull()) {
 
-            String email = getFieldValue(o, subjectFieldName).trim();
-            String validationFailedString = email + " is not a valid email. " + validationPassedString;
+            email = getFieldValue(o, subjectFieldName).trim();
 
             Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
             if (!matcher.find()) {
-                return validationFailedString;
+                isValidationFailed = true;
             }
-
-            return validationPassedString;
 
         }
 
+        boolean isFailed = isValidationFailed && isBail;
+        String message = email + " is not a valid email. ";
+
+        if(isFailed)
+            return message;
+
+        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
+        String validationFailedString = message + validationPassedString;
+
+        if(isValidationFailed)
+            return validationFailedString;
 
         return validationPassedString;
     }
