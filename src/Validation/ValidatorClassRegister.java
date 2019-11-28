@@ -23,12 +23,6 @@ public class ValidatorClassRegister {
                                 (new DefaultValidationDecorator(), "")
                                 .getClass().getName());
 
-        this.validatorClassRegistry
-                .put("date",
-                        new DateValidationDecorator<>
-                                (new DefaultValidationDecorator(), "")
-                                .getClass().getName());
-
 
     }
 
