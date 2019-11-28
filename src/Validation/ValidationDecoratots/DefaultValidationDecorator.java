@@ -25,6 +25,8 @@ public class DefaultValidationDecorator<T> extends ValidationDecorator<T> {
             setIsNull(false);
         }
 
-        return "";
+        if(validationDecorator == null)
+            return "";
+        return validationDecorator.validate(o, subjectFieldName);
     }
 }

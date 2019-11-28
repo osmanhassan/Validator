@@ -12,6 +12,12 @@ public class ValidatorClassRegister {
         this.validatorClassRegistry = new HashMap();
 
         this.validatorClassRegistry
+                .put("default",
+                        new DefaultValidationDecorator<>
+                                (new DefaultValidationDecorator(), "")
+                                .getClass().getName());
+
+        this.validatorClassRegistry
                 .put("bail",
                         new BailValidationDecorator<>
                                 (new DefaultValidationDecorator(), "")
