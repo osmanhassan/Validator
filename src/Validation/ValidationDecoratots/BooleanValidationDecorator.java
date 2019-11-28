@@ -18,13 +18,9 @@ public class BooleanValidationDecorator<T> extends ValidationDecorator<T> {
 
             String value = getFieldValue(o, subjectFieldName).trim().toLowerCase();
 
-            try {
-                boolean b = Boolean.valueOf(value);
-            }
-            catch (Exception e){
-                isValidationFailed = true;
-                //e.printStackTrace();
-            }
+            if(value.equals("true") || value.equals("false") || value.equals("1") || value.equals("0")){}
+            else{isValidationFailed = true;}
+            
         }
 
         boolean isFailed = isValidationFailed && isBail;
