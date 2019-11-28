@@ -14,9 +14,12 @@ public class Main {
 
         LinkedHashMap rulesByFields = new LinkedHashMap();
 
+        rulesByFields.put("name", "bail | boolean");
+        rulesByFields.put("email", "boolean");
+
         User user = new User();
         user.setName("Nadim");
-        user.setEmail("has@g.cp");
+        user.setEmail("true");
 
         Validator validator = new Validator(user, rulesByFields);
         System.out.println(validator.validate());

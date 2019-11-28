@@ -23,6 +23,12 @@ public class ValidatorClassRegister {
                                 (new DefaultValidationDecorator(), "")
                                 .getClass().getName());
 
+        this.validatorClassRegistry
+                .put("boolean",
+                        new BooleanValidationDecorator<>
+                                (new DefaultValidationDecorator(), "")
+                                .getClass().getName());
+
 
     }
 
