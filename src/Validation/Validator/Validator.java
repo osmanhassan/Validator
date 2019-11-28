@@ -32,7 +32,7 @@ public class Validator<T> {
         rulesByField.forEach((key, value) -> {
             String fieldName = key.toString();
             String rulesString = value.toString();
-
+            rulesString = "default | " + rulesString;
             String[] rules = rulesString.split("\\|");
 
             try {
