@@ -17,21 +17,31 @@ public class AlphaDashValidationDecorator<T> extends ValidationDecorator<T> {
     @Override
     public String validate(T o, String subjectFieldName) throws Exception {
 
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
+        String fieldDisplayName = getDisplayNameFormFieldName(subjectFieldName);
+        boolean isValidationFailed = false;
 
         if (!getIsNull()) {
-            String fieldDisplayName = getDisplayNameFormFieldName(subjectFieldName);
-            String fieldValue = getFieldValue(o, subjectFieldName).trim();
-            String validationFailedString = fieldDisplayName + " can contain alphabets, digits, '-' and '_' only. " + validationPassedString;
 
+            String fieldValue = getFieldValue(o, subjectFieldName).trim();
             Matcher matcher = VALID_ALPHA_DASH_REGEX.matcher(fieldValue);
+
             if (!matcher.find()) {
-                return validationFailedString;
+                isValidationFailed = true;
             }
 
-            return validationPassedString;
-
         }
+
+        boolean isFailed = isValidationFailed && isBail;
+        String message = fieldDisplayName + " can contain alphabets, digits, '-' and '_' only. ";
+
+        if(isFailed)
+            return message;
+
+        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
+        String validationFailedString = message + validationPassedString;
+
+        if(isValidationFailed)
+            return validationFailedString;
 
         return validationPassedString;
     }
