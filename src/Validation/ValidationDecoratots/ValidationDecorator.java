@@ -1,12 +1,15 @@
 package Validation.ValidationDecoratots;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class ValidationDecorator<T> {
 
     static boolean isNull;
     static boolean isBail;
+    static HashMap settings;
+
     ValidationDecorator validationDecorator;
     String validationAdditionalInfo;
 
@@ -30,6 +33,13 @@ public abstract class ValidationDecorator<T> {
     }
     public boolean getIsBail() {
         return isBail;
+    }
+
+    public void setSettings(HashMap settings) {
+        ValidationDecorator.settings = settings;
+    }
+    public HashMap getSettings() {
+        return settings;
     }
 
     public Method getMethodFromFieldName(T o, String fieldName) throws Exception {
