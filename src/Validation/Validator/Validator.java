@@ -13,13 +13,32 @@ public class Validator<T> {
     ValidatorClassRegister validatorClassRegister;
     T subjectObject;
     LinkedHashMap rulesByField;
-
+    HashMap settings;
 
     public Validator(T subjectObject, LinkedHashMap rulesByField){
 
         this.subjectObject = subjectObject;
         this.rulesByField = rulesByField;
         this.validatorClassRegister = new ValidatorClassRegister();
+        setOwnSettings();
+
+    }
+
+    public Validator(T subjectObject, LinkedHashMap rulesByField, HashMap settings){
+
+        this.subjectObject = subjectObject;
+        this.rulesByField = rulesByField;
+        this.validatorClassRegister = new ValidatorClassRegister();
+        setOwnSettings();
+        settings.forEach((key, value) -> {
+            this.settings.put(key, value);
+        });
+    }
+
+    public void setOwnSettings(){
+        this.settings = new HashMap();
+
+        this.settings.put("default.date.format", "yyyy-MM-dd hh:mm:ss");
 
     }
 
@@ -73,7 +92,7 @@ public class Validator<T> {
             count++;
         }
 
-        ValidationDecorator<T> validationDecorator = new DefaultValidationDecorator<T>(null, "");
+        ValidationDecorator<T> validationDecorator = new DefaultValidationDecorator<T>(null, "", this.settings);
 
         for(int i = validatorClasses.length - 1; i >= 0; i --){
 
