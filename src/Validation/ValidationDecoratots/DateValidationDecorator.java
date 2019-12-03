@@ -18,12 +18,13 @@ public class DateValidationDecorator<T> extends ValidationDecorator<T> {
 
 
         String value = "";
+        String defaultFormat = "yyyy-MM-dd hh:mm:ss";
 
         if (!getIsNull()) {
 
             value = getFieldValue(o, subjectFieldName).trim();
 
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(defaultFormat);
 
             if(! validationAdditionalInfo.trim().equals("")){
                 try {
@@ -43,7 +44,14 @@ public class DateValidationDecorator<T> extends ValidationDecorator<T> {
         }
 
         boolean isFailed = isValidationFailed && isBail;
-        String message = value + " is not a valid date. ";
+        String message = value + " is not a valid date. Date format must be ";
+        if(! validationAdditionalInfo.trim().equals("")) {
+            message = message + validationAdditionalInfo.trim();
+        }
+        else{
+            message = message + defaultFormat;
+        }
+
 
         if(isFailed)
             return message;
