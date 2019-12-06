@@ -1,4 +1,5 @@
 import Pojo.User;
+import Validation.Settings.ValidatorCustomSettings;
 import Validation.Validator.Validator;
 import javafx.print.Collation;
 
@@ -15,12 +16,10 @@ public class Main {
         LinkedHashMap rulesByFields = new LinkedHashMap();
         rulesByFields.put("name", "bail | date_after: 12/03/2019, MM/dd/yyyy");
         User user = new User();
-        user.setName("12/02/2019");
+        user.setName("12/04/2019");
         user.setEmail("has@g.cp");
 
-        HashMap settings = new HashMap();
-        settings.put("default.date.format", "dd/MM/yyyy");
-        Validator validator = new Validator(user, rulesByFields, settings);
+        Validator validator = new Validator(user, rulesByFields, new ValidatorCustomSettings());
         System.out.println(validator.validate());
 
 
