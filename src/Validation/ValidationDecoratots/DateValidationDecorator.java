@@ -18,7 +18,7 @@ public class DateValidationDecorator<T> extends ValidationDecorator<T> {
 
 
         String value = "";
-        String defaultFormat = "yyyy-MM-dd hh:mm:ss";
+        String defaultFormat = settings.get("default.date.format").toString().trim();
 
         if (!getIsNull()) {
 
