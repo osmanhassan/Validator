@@ -1,5 +1,7 @@
 package Validation.Validator;
 
+import Validation.Settings.IValidatorSettings;
+import Validation.Settings.ValidatorDefaultSettings;
 import Validation.ValidationDecoratots.DefaultValidationDecorator;
 import Validation.ValidationDecoratots.ValidationDecorator;
 import Validation.ValidatorClassRegister;
@@ -20,26 +22,26 @@ public class Validator<T> {
         this.subjectObject = subjectObject;
         this.rulesByField = rulesByField;
         this.validatorClassRegister = new ValidatorClassRegister();
-        setOwnSettings();
+        setSettings(new ValidatorDefaultSettings());
 
     }
 
-    public Validator(T subjectObject, LinkedHashMap rulesByField, HashMap settings){
+    public Validator(T subjectObject, LinkedHashMap rulesByField, IValidatorSettings validatorSettings){
 
         this.subjectObject = subjectObject;
         this.rulesByField = rulesByField;
         this.validatorClassRegister = new ValidatorClassRegister();
-        setOwnSettings();
-        settings.forEach((key, value) -> {
-            this.settings.put(key, value);
-        });
+        setSettings(new ValidatorDefaultSettings());
+        setSettings(validatorSettings);
     }
 
-    public void setOwnSettings(){
-        this.settings = new HashMap();
-
-        this.settings.put("default.date.format", "yyyy-MM-dd hh:mm:ss");
-
+    public void setSettings(IValidatorSettings validatorSettings){
+        if(this.settings == null){
+            this.settings = validatorSettings.settings();
+        }
+        else{
+            this.settings.putAll(validatorSettings.settings());
+        }
     }
 
     public String validate() throws IllegalAccessException {
