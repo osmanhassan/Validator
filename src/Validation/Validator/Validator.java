@@ -1,111 +1,52 @@
 package Validation.Validator;
 
+import Validation.Register.IValidatorClassRegister;
 import Validation.Settings.IValidatorSettings;
 import Validation.Settings.ValidatorDefaultSettings;
-import Validation.ValidationDecoratots.DefaultValidationDecorator;
-import Validation.ValidationDecoratots.ValidationDecorator;
-import Validation.ValidatorClassRegister;
+import Validation.Register.ValidatorDefaultClassRegister;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Validator<T> {
-
-    ValidatorClassRegister validatorClassRegister;
+    HashMap<String, Class> validatorClassRegistry;
     T subjectObject;
     LinkedHashMap rulesByField;
     HashMap settings;
+    HashMap errorMessages;
 
     public Validator(T subjectObject, LinkedHashMap rulesByField){
-
         this.subjectObject = subjectObject;
         this.rulesByField = rulesByField;
-        this.validatorClassRegister = new ValidatorClassRegister();
-        setSettings(new ValidatorDefaultSettings());
-
+        this.validatorClassRegistry = new ValidatorDefaultClassRegister().registry();
+        this.settings = new ValidatorDefaultSettings().settings();
     }
 
-    public Validator(T subjectObject, LinkedHashMap rulesByField, IValidatorSettings validatorSettings){
-
-        this.subjectObject = subjectObject;
-        this.rulesByField = rulesByField;
-        this.validatorClassRegister = new ValidatorClassRegister();
-        setSettings(new ValidatorDefaultSettings());
-        setSettings(validatorSettings);
+    public Validator settings(IValidatorSettings validatorSettings) {
+        this.settings.putAll(validatorSettings.settings());
+        return this;
     }
 
-    public void setSettings(IValidatorSettings validatorSettings){
-        if(this.settings == null){
-            this.settings = validatorSettings.settings();
-        }
-        else{
-            this.settings.putAll(validatorSettings.settings());
-        }
+    public Validator errorMessages(HashMap errorMessages) {
+        this.errorMessages = errorMessages;
+        return this;
     }
 
-    public String validate() throws IllegalAccessException {
-
-        LinkedHashMap rulesByField = this.rulesByField;
-        HashMap validatorClassRegistry = this.validatorClassRegister.getValidatorClassRegistry();
-        final String[] errorMessage = {""};
-
-        rulesByField.forEach((key, value) -> {
-            String fieldName = key.toString();
-            String rulesString = value.toString();
-            rulesString = "default | " + rulesString;
-            String[] rules = rulesString.split("\\|");
-
-            try {
-                errorMessage[0] += validateSingleField(fieldName, rules);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+    public Validator validatorClassRegister(IValidatorClassRegister validatorClassRegister) {
+        validatorClassRegister.registry().forEach((key, value)->{
+            this.validatorClassRegistry.computeIfAbsent(key, k->value);
         });
-
-        return errorMessage[0];
-
+        return this;
     }
 
-    public String validateSingleField(String subjectFieldName, String[] rules) throws Exception {
-
-        Class[] validatorClasses = new Class[rules.length];
-        String[] additionalDataOfRules = new String[rules.length];
-
-        int count = 0;
-        for(String rule : rules){
-            rule = rule.trim();
-            String[] partsOfRule = rule.split("\\:");
-            String ruleName = partsOfRule[0].trim().toLowerCase();
-
-            String additionalDataOfRule = "";
-
-            if(partsOfRule.length > 1) {
-                additionalDataOfRule = partsOfRule[1];
-            }
-
-            String className = this.validatorClassRegister.getValidatorClassRegistry().get(ruleName).toString();
-            Class validatorClass = Class.forName(className);
-            validatorClasses[count] = validatorClass;
-            additionalDataOfRules[count] = additionalDataOfRule.trim();
-
-            count++;
+    public String validate(){
+        ValidationExecutor validationExecutor = new ValidationExecutor(this);
+        try {
+           return validationExecutor.validate();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
 
-        ValidationDecorator<T> validationDecorator = new DefaultValidationDecorator<T>(null, "", this.settings);
-
-        for(int i = validatorClasses.length - 1; i >= 0; i --){
-
-            Class cls = validatorClasses[i];
-            String additionalDataOfRule = additionalDataOfRules[i];
-            Constructor constructor = cls.getConstructor(ValidationDecorator.class, String.class);
-            validationDecorator = (ValidationDecorator<T>) constructor.newInstance(validationDecorator, additionalDataOfRule);
-        }
-
-
-        return validationDecorator.validate(this.subjectObject, subjectFieldName);
+        return "";
     }
-
 }
