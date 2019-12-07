@@ -1,12 +1,8 @@
 import Pojo.User;
+import Validation.Settings.ValidatorCustomSettings;
 import Validation.Validator.Validator;
-import javafx.print.Collation;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class Main {
 
@@ -15,11 +11,12 @@ public class Main {
         LinkedHashMap rulesByFields = new LinkedHashMap();
 
         User user = new User();
-        user.setName("Nadim");
-        user.setEmail("has@g.cp");
 
-        Validator validator = new Validator(user, rulesByFields);
-        System.out.println(validator.validate());
+       String message = new Validator(user, rulesByFields)
+                            .settings(new ValidatorCustomSettings())
+                            .validate();
+       
+        System.out.println(message);
 
 
     }
