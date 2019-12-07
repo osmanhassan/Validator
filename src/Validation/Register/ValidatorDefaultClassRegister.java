@@ -1,37 +1,31 @@
-package Validation;
+package Validation.Register;
 
 import Validation.ValidationDecoratots.*;
 import java.util.HashMap;
 
-public class ValidatorClassRegister {
+public class ValidatorDefaultClassRegister implements IValidatorClassRegister{
 
-    HashMap validatorClassRegistry;
+    @Override
+    public HashMap<String, Class> registry() {
+        HashMap<String, Class> validatorClassRegistry = new HashMap();
 
-    public ValidatorClassRegister() {
-
-        this.validatorClassRegistry = new HashMap();
-
-        this.validatorClassRegistry
+        validatorClassRegistry
                 .put("alpha", new AlphaValidationDecorator<>
                         (new DefaultValidationDecorator(), "")
-                        .getClass().getName());
+                        .getClass());
 
-        this.validatorClassRegistry
+        validatorClassRegistry
                 .put("default",
                         new DefaultValidationDecorator<>
                                 (new DefaultValidationDecorator(), "")
-                                .getClass().getName());
+                                .getClass());
 
-        this.validatorClassRegistry
+        validatorClassRegistry
                 .put("bail",
                         new BailValidationDecorator<>
                                 (new DefaultValidationDecorator(), "")
-                                .getClass().getName());
+                                .getClass());
 
-
-    }
-
-    public HashMap getValidatorClassRegistry() {
         return validatorClassRegistry;
     }
 }
