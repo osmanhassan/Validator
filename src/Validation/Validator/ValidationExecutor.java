@@ -52,6 +52,7 @@ public class ValidationExecutor<T> {
 
         Class[] validatorClasses = new Class[rules.length];
         String[] additionalDataOfRules = new String[rules.length];
+        String[] ruleNames = new String[rules.length];
 
         int count = 0;
         for(String rule : rules){
@@ -65,26 +66,28 @@ public class ValidationExecutor<T> {
                 additionalDataOfRule = partsOfRule[1];
             }
 
-            String className = this.validatorClassRegistry.get(ruleName).getName();
-            Class validatorClass = Class.forName(className);
+            Class validatorClass = this.validatorClassRegistry.get(ruleName);
             validatorClasses[count] = validatorClass;
             additionalDataOfRules[count] = additionalDataOfRule.trim();
+            ruleNames[count] = ruleName;
 
             count++;
         }
 
-        ValidationDecorator<T> validationDecorator = new DefaultValidationDecorator<T>(null, "", this.settings);
+        ValidationDecorator<T> validationDecorator = new DefaultValidationDecorator<T>(null, "", this.settings, "");
 
         for(int i = validatorClasses.length - 1; i >= 0; i --){
 
             Class cls = validatorClasses[i];
             String additionalDataOfRule = additionalDataOfRules[i];
+            String ruleName = ruleNames[i];
+
             Constructor constructor = cls.getConstructor(ValidationDecorator.class, String.class);
-            validationDecorator = (ValidationDecorator<T>) constructor.newInstance(validationDecorator, additionalDataOfRule);
+            validationDecorator = (ValidationDecorator<T>) constructor.newInstance(validationDecorator, additionalDataOfRule, ruleName);
         }
 
 
-        return validationDecorator.validate(this.subjectObject, subjectFieldName);
+        return validationDecorator.validate(this.subjectObject, subjectFieldName, errorMessages);
     }
 
 }
