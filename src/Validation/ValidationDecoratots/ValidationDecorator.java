@@ -1,5 +1,7 @@
 package Validation.ValidationDecoratots;
 
+import Validation.ErrorMessage.DefaultErrorMessages;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -12,13 +14,73 @@ public abstract class ValidationDecorator<T> {
 
     ValidationDecorator validationDecorator;
     String validationAdditionalInfo;
+    String ruleName;
 
-    public ValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
+    public ValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
         this.validationDecorator = validationDecorator;
         this.validationAdditionalInfo = validationAdditionalInfo;
+        this.ruleName = ruleName;
     }
 
-    public abstract String validate(T o, String subjectFieldName) throws Exception;
+    public abstract boolean isValid(T o, String subjectFieldName) throws Exception;
+
+    public String validate(T o, String subjectFieldName, HashMap<String, String> errorMessages) throws Exception {
+
+        boolean isBailed = isBail;
+
+        boolean isValid = isValid(o, subjectFieldName);
+
+        boolean isFailed = isBailed && ! isValid;
+
+        String errorMessage = "";
+
+        if(! isValid){
+            errorMessage = getErrorMessage(subjectFieldName, errorMessages, o, subjectFieldName);
+        }
+
+        if(isFailed){
+            return errorMessage;
+        }
+        else if(! isValid){
+            if(validationDecorator == null)
+                return errorMessage;
+
+            return errorMessage + " " + validationDecorator.validate(o, subjectFieldName, errorMessages);
+        }
+
+        return validationDecorator.validate(o, subjectFieldName, errorMessages);
+    }
+
+    public String getErrorMessage(String subjectFieldName, HashMap<String, String> errorMessages, T subjectObject, String fieldName){
+
+        String key = subjectFieldName + "." + this.ruleName;
+        String errorMessage = "";
+
+        if(errorMessages.containsKey(key)){
+            errorMessage = errorMessages.get(key);
+            return getModifiedMessage(errorMessage, subjectObject, fieldName);
+        }
+
+        HashMap<String, String> defaultErrorMessages = new DefaultErrorMessages().getErrorMessages();
+
+        if(defaultErrorMessages.containsKey(this.ruleName)){
+            errorMessage = defaultErrorMessages.get(this.ruleName);;
+            return getModifiedMessage(errorMessage, subjectObject, fieldName);
+        }
+
+        return errorMessage;
+
+    }
+
+    public String getModifiedMessage(String message, T o, String fieldName) {
+
+        try {
+            return message.replace("{{fielNale}}", getDisplayNameFormFieldName(fieldName)).replace("{{value}}", getFieldValue(o, fieldName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return message;
+    }
 
     public void setIsNull(boolean isNull) {
         ValidationDecorator.isNull = isNull;
