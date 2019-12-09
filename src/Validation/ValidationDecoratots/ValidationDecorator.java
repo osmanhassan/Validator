@@ -48,7 +48,9 @@ public abstract class ValidationDecorator<T> {
             return errorMessage + " " + validationDecorator.validate(o, subjectFieldName, errorMessages);
         }
 
-        return validationDecorator.validate(o, subjectFieldName, errorMessages);
+        if(validationDecorator != null)
+            return validationDecorator.validate(o, subjectFieldName, errorMessages);
+        return "";
     }
 
     public String getErrorMessage(String subjectFieldName, HashMap<String, String> errorMessages, T subjectObject, String fieldName){
@@ -56,9 +58,11 @@ public abstract class ValidationDecorator<T> {
         String key = subjectFieldName + "." + this.ruleName;
         String errorMessage = "";
 
-        if(errorMessages.containsKey(key)){
-            errorMessage = errorMessages.get(key);
-            return getModifiedMessage(errorMessage, subjectObject, fieldName);
+        if(errorMessages != null) {
+            if (errorMessages.containsKey(key)) {
+                errorMessage = errorMessages.get(key);
+                return getModifiedMessage(errorMessage, subjectObject, fieldName);
+            }
         }
 
         HashMap<String, String> defaultErrorMessages = new DefaultErrorMessages().getErrorMessages();
@@ -75,7 +79,7 @@ public abstract class ValidationDecorator<T> {
     public String getModifiedMessage(String message, T o, String fieldName) {
 
         try {
-            return message.replace("{{fielNale}}", getDisplayNameFormFieldName(fieldName)).replace("{{value}}", getFieldValue(o, fieldName));
+            return message.replace("{{fieldName}}", getDisplayNameFormFieldName(fieldName)).replace("{{value}}", getFieldValue(o, fieldName));
         } catch (Exception e) {
             e.printStackTrace();
         }
