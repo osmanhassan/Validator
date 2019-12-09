@@ -9,7 +9,7 @@ public class DefaultErrorMessages implements IErrorMessages {
 
         errorMessages.put("default", "");
         errorMessages.put("bail", "");
-
+        errorMessages.put("email", "{{value}} is not a valid email.");
         return errorMessages;
     }
 }

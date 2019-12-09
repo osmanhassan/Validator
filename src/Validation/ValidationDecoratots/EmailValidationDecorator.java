@@ -10,15 +10,12 @@ public class EmailValidationDecorator<T> extends ValidationDecorator<T> {
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
 
-    public EmailValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public EmailValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        boolean isValidationFailed = false;
-
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         String email = "";
 
@@ -28,23 +25,11 @@ public class EmailValidationDecorator<T> extends ValidationDecorator<T> {
 
             Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
             if (!matcher.find()) {
-                isValidationFailed = true;
+               return false;
             }
 
         }
 
-        boolean isFailed = isValidationFailed && isBail;
-        String message = email + " is not a valid email. ";
-
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
+        return true;
     }
 }
