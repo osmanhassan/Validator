@@ -10,15 +10,12 @@ public class AlphaDashValidationDecorator<T> extends ValidationDecorator<T> {
     public static final Pattern VALID_ALPHA_DASH_REGEX =
             Pattern.compile("^[0-9A-Za-z\\_-]+$", Pattern.CASE_INSENSITIVE);
 
-    public AlphaDashValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public AlphaDashValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        String fieldDisplayName = getDisplayNameFormFieldName(subjectFieldName);
-        boolean isValidationFailed = false;
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         if (!getIsNull()) {
 
@@ -26,23 +23,10 @@ public class AlphaDashValidationDecorator<T> extends ValidationDecorator<T> {
             Matcher matcher = VALID_ALPHA_DASH_REGEX.matcher(fieldValue);
 
             if (!matcher.find()) {
-                isValidationFailed = true;
+                return false;
             }
-
         }
+        return true;
 
-        boolean isFailed = isValidationFailed && isBail;
-        String message = fieldDisplayName + " can contain alphabets, digits, '-' and '_' only. ";
-
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
     }
 }

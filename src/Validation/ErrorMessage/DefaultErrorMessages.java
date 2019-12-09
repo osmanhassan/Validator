@@ -9,6 +9,7 @@ public class DefaultErrorMessages implements IErrorMessages {
 
         errorMessages.put("default", "");
         errorMessages.put("bail", "");
+        errorMessages.put("alpha_dash", "{{fieldName}} can contain alphabets, digits, '-' and '_' only.");
 
         return errorMessages;
     }
