@@ -9,6 +9,7 @@ public class DefaultErrorMessages implements IErrorMessages {
 
         errorMessages.put("default", "");
         errorMessages.put("bail", "");
+        errorMessages.put("accepted", "{{fieldName}} must be accepted.");
 
         return errorMessages;
     }

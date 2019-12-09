@@ -2,41 +2,26 @@ package Validation.ValidationDecoratots;
 
 public class AcceptedValidationDecorator<T> extends ValidationDecorator<T> {
 
-    public AcceptedValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public AcceptedValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        String displayName = getDisplayNameFormFieldName(subjectFieldName);
-        boolean isValidationFailed = false;
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         if (!getIsNull()) {
 
             String value = getFieldValue(o, subjectFieldName).trim().toLowerCase();
 
             if (value.equals("1") || value.equals("yes") || value.equals("on") || value.equals("true")) {
-
+                return true;
             }
             else{
-                isValidationFailed = true;
+                return false;
             }
 
         }
 
-        boolean isFailed = isValidationFailed && isBail;
-        String message = displayName +" must be accepted. ";
-
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
+       return true;
     }
 }

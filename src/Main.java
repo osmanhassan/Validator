@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         LinkedHashMap rulesByFields = new LinkedHashMap();
-        rulesByFields.put("name", "accepted");
+        rulesByFields.put("name", "bail | accepted");
         rulesByFields.put("email", "accepted");
 
         User user = new User();
