@@ -82,7 +82,7 @@ public class ValidationExecutor<T> {
             String additionalDataOfRule = additionalDataOfRules[i];
             String ruleName = ruleNames[i];
 
-            Constructor constructor = cls.getConstructor(ValidationDecorator.class, String.class);
+            Constructor constructor = cls.getConstructor(ValidationDecorator.class, String.class, String.class);
             validationDecorator = (ValidationDecorator<T>) constructor.newInstance(validationDecorator, additionalDataOfRule, ruleName);
         }
 
