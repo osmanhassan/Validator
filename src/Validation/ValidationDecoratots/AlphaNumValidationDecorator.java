@@ -11,15 +11,12 @@ public class AlphaNumValidationDecorator<T> extends ValidationDecorator<T> {
     public static final Pattern VALID_ALPHA_NUM_REGEX =
             Pattern.compile("[0-9]+$", Pattern.CASE_INSENSITIVE);
 
-    public AlphaNumValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public AlphaNumValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        String fieldDisplayName = getDisplayNameFormFieldName(subjectFieldName);
-        boolean isValidationFailed = false;
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         if (!getIsNull()) {
 
@@ -27,24 +24,12 @@ public class AlphaNumValidationDecorator<T> extends ValidationDecorator<T> {
             Matcher matcher = VALID_ALPHA_NUM_REGEX.matcher(fieldValue);
 
             if (!matcher.find()) {
-                isValidationFailed = true;
+               return false;
             }
 
         }
 
-        boolean isFailed = isValidationFailed && isBail;
-        String message = fieldDisplayName + " can contain digits only. ";
-
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
+       return true;
     }
 }
 

@@ -9,6 +9,7 @@ public class DefaultErrorMessages implements IErrorMessages {
 
         errorMessages.put("default", "");
         errorMessages.put("bail", "");
+        errorMessages.put("alpha_num", "{{fieldName}} can contain digits only.");
 
         return errorMessages;
     }
