@@ -9,6 +9,7 @@ public class DefaultErrorMessages implements IErrorMessages {
 
         errorMessages.put("default", "");
         errorMessages.put("bail", "");
+        errorMessages.put("date", "{{value}} is not a valid date.");
 
         return errorMessages;
     }

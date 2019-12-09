@@ -7,15 +7,12 @@ import java.time.format.DateTimeParseException;
 
 public class DateValidationDecorator<T> extends ValidationDecorator<T> {
 
-    public DateValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public DateValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        boolean isValidationFailed = false;
-
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         String value = "";
         String defaultFormat = settings.get("default.date.format").toString().trim();
@@ -37,31 +34,13 @@ public class DateValidationDecorator<T> extends ValidationDecorator<T> {
 
             try {
                 LocalDate.parse(value, dateTimeFormatter);
+                return true;
             } catch (DateTimeParseException e) {
-                isValidationFailed = true;
+                return false;
             }
 
         }
 
-        boolean isFailed = isValidationFailed && isBail;
-        String message = value + " is not a valid date. Date format must be ";
-        if(! validationAdditionalInfo.trim().equals("")) {
-            message = message + validationAdditionalInfo.trim();
-        }
-        else{
-            message = message + defaultFormat;
-        }
-
-
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
+       return true;
     }
 }
