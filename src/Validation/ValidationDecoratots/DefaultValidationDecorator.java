@@ -1,5 +1,6 @@
 package Validation.ValidationDecoratots;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
@@ -22,13 +23,17 @@ public class DefaultValidationDecorator<T> extends ValidationDecorator<T> {
     @Override
     public boolean isValid(T o, String subjectFieldName) throws Exception {
 
-        Method method = getMethodFromFieldName(o, subjectFieldName);
+        Field field = o.getClass().getDeclaredField(subjectFieldName);
+        boolean isAccessible = field.isAccessible();
+        field.setAccessible(true);
 
-        if (method.invoke(o) == null) {
+        if (field.get(o) == null) {
             setIsNull(true);
         } else {
             setIsNull(false);
         }
+
+        field.setAccessible(isAccessible);
 
         return true;
     }
