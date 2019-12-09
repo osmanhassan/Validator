@@ -7,41 +7,24 @@ import java.util.List;
 
 public class RequiredValidationDecorator<T> extends ValidationDecorator<T> {
 
-    public RequiredValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public RequiredValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        String displayName = getDisplayNameFormFieldName(subjectFieldName);
-        boolean isValidationFailed = false;
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         if (getIsNull()) {
-            isValidationFailed = true;
+           return false;
         }
         else{
             String value = getFieldValue(o, subjectFieldName);
 
             if (value.trim().equals("")) {
-                isValidationFailed = true;
+                return false;
             }
+            return true;
         }
-
-        boolean isFailed = isValidationFailed && isBail;
-        String message = displayName + " is required. ";
-
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
-
 
     }
 }
