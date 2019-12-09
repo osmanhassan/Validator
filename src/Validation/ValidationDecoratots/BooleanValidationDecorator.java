@@ -3,38 +3,26 @@ package Validation.ValidationDecoratots;
 import java.util.regex.Matcher;
 
 public class BooleanValidationDecorator<T> extends ValidationDecorator<T> {
-    public BooleanValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public BooleanValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        boolean isValidationFailed = false;
-
-        String displayName = getDisplayNameFormFieldName(subjectFieldName);
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         if (!getIsNull()) {
 
             String value = getFieldValue(o, subjectFieldName).trim().toLowerCase();
 
-            if(value.equals("true") || value.equals("false") || value.equals("1") || value.equals("0")){}
-            else{isValidationFailed = true;}
-            
+            if(value.equals("true") || value.equals("false") || value.equals("1") || value.equals("0")){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
 
-        boolean isFailed = isValidationFailed && isBail;
-        String message = displayName + " must be boolean. ";
+        return true;
 
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
     }
 }
