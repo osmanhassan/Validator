@@ -9,6 +9,7 @@ public class DefaultErrorMessages implements IErrorMessages {
 
         errorMessages.put("default", "");
         errorMessages.put("bail", "");
+        errorMessages.put("date_after", "{{fieldName}} should be a date after provided date.");
 
         return errorMessages;
     }

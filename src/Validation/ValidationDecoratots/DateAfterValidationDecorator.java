@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class DateAfterValidationDecorator<T> extends ValidationDecorator<T> {
-    public DateAfterValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public DateAfterValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     public DateTimeFormatter getDateTimeFormatter(String defaultFormat, String newFormat){
@@ -21,10 +21,7 @@ public class DateAfterValidationDecorator<T> extends ValidationDecorator<T> {
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        boolean isValidationFailed = false;
-
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         String dateString1 = "?";
         String dateString2 = "?";
@@ -61,28 +58,17 @@ public class DateAfterValidationDecorator<T> extends ValidationDecorator<T> {
                 LocalDate date2 = LocalDate.parse(dateString2, dateTimeFormatter2);
 
                 if(date1.compareTo(date2) <= 0){
-                    isValidationFailed = true;
+                    return false;
                 }
+                return true;
 
             } catch (DateTimeParseException e) {
-                isValidationFailed = true;
+                return false;
             }
 
         }
 
-        boolean isFailed = isValidationFailed && isBail;
-        String message = dateString1 + " should be a date after " + dateString2;
+        return true;
 
-
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
     }
 }
