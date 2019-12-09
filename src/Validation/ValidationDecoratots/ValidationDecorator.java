@@ -2,6 +2,7 @@ package Validation.ValidationDecoratots;
 
 import Validation.ErrorMessage.DefaultErrorMessages;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -126,7 +127,11 @@ public abstract class ValidationDecorator<T> {
     }
 
     public String getFieldValue(T o, String fieldName) throws Exception {
-        Method method = getMethodFromFieldName(o, fieldName);
-        return method.invoke(o).toString();
+        Field field = o.getClass().getDeclaredField(fieldName);
+        boolean isAccessible = field.isAccessible();
+        field.setAccessible(true);
+        String value = field.get(o).toString();
+        field.setAccessible(isAccessible);
+        return value;
     }
 }
