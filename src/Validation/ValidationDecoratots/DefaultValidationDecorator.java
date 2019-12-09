@@ -6,23 +6,21 @@ import java.util.HashMap;
 
 public class DefaultValidationDecorator<T> extends ValidationDecorator<T> {
 
-    public DefaultValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public DefaultValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
-    public DefaultValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, HashMap settings) {
-        super(validationDecorator, validationAdditionalInfo);
+    public DefaultValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, HashMap settings, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
         setSettings(settings);
     }
 
-
-
     public DefaultValidationDecorator() {
-        super(null, "");
+        super(null, "", "");
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         Method method = getMethodFromFieldName(o, subjectFieldName);
 
@@ -32,8 +30,6 @@ public class DefaultValidationDecorator<T> extends ValidationDecorator<T> {
             setIsNull(false);
         }
 
-        if(validationDecorator == null)
-            return "";
-        return validationDecorator.validate(o, subjectFieldName);
+        return true;
     }
 }
