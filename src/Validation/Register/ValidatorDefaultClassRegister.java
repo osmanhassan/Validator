@@ -10,22 +10,13 @@ public class ValidatorDefaultClassRegister implements IValidatorClassRegister{
         HashMap<String, Class> validatorClassRegistry = new HashMap();
 
         validatorClassRegistry
-                .put("default",
-                        new DefaultValidationDecorator<>
-                                (new DefaultValidationDecorator(), "")
-                                .getClass());
+                .put("default", DefaultValidationDecorator.class);
 
         validatorClassRegistry
-                .put("bail",
-                        new BailValidationDecorator<>
-                                (new DefaultValidationDecorator(), "")
-                                .getClass());
+                .put("bail", BailValidationDecorator.class);
 
         validatorClassRegistry
-                .put("boolean",
-                        new BooleanValidationDecorator<>
-                                (new DefaultValidationDecorator(), "")
-                                .getClass());
+                .put("boolean", BooleanValidationDecorator.class);
 
         return validatorClassRegistry;
     }
