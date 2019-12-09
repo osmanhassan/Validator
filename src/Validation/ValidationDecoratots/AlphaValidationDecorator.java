@@ -10,15 +10,12 @@ public class AlphaValidationDecorator<T> extends ValidationDecorator<T> {
     public static final Pattern VALID_ALPHA_REGEX =
             Pattern.compile("^[a-zA-Z]*$", Pattern.CASE_INSENSITIVE);
 
-    public AlphaValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo) {
-        super(validationDecorator, validationAdditionalInfo);
+    public AlphaValidationDecorator(ValidationDecorator validationDecorator, String validationAdditionalInfo, String ruleName) {
+        super(validationDecorator, validationAdditionalInfo, ruleName);
     }
 
     @Override
-    public String validate(T o, String subjectFieldName) throws Exception {
-
-        String fieldDisplayName = getDisplayNameFormFieldName(subjectFieldName);
-        boolean isValidationFailed = false;
+    public boolean isValid(T o, String subjectFieldName) throws Exception {
 
         if (!getIsNull()) {
 
@@ -26,24 +23,12 @@ public class AlphaValidationDecorator<T> extends ValidationDecorator<T> {
             Matcher matcher = VALID_ALPHA_REGEX.matcher(fieldValue);
 
             if (!matcher.find()) {
-                isValidationFailed = true;
+                return false;
             }
 
         }
 
-        boolean isFailed = isValidationFailed && isBail;
-        String message = fieldDisplayName + " can contain alphabets only. ";
-
-        if(isFailed)
-            return message;
-
-        String validationPassedString = validationDecorator.validate(o, subjectFieldName);
-        String validationFailedString = message + validationPassedString;
-
-        if(isValidationFailed)
-            return validationFailedString;
-
-        return validationPassedString;
+        return true;
 
     }
 }
